@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" monitorInterval="30">
+ 
+    <!-- Logging Properties -->
+    <Properties>
+        <!-- <Property name="LOG_PATTERN">[%d{dd-MM-yyyy HH:mm:ss a}] [%t] - %msg%n"</Property> -->
+        <Property name="CUSTOMLOG_PATTERN">[%d{dd-MM-yyyy HH:mm:ss.SSS}] @:@ ${hostName} @:@ ${bundle:application:product.name} @:@ %m%n%ex</Property>
+    	<Property name="PRODUCT_NAME">${bundle:application:product.name}</Property>
+    </Properties>
+     
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${CUSTOMLOG_PATTERN}"/>
+        </Console>
+    </Appenders>
+ 
+    <Loggers>
+     
+        <Logger name="com.customlogwriter" additivity="false" level="info">
+             <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.customlogwriter" additivity="false" level="debug">
+             <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.customlogwriter" additivity="false" level="TRACE">
+             <AppenderRef ref="Console"/>
+        </Logger>
+      
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+ 
+</Configuration>

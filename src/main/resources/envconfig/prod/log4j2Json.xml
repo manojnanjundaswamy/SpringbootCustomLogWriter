@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" monitorInterval="30">
+ 
+    <!-- Logging Properties -->
+    <Properties>
+       <!--  <Property name="LOG_PATTERN">%d{dd-MM-yyyy HH:mm:ss.SSS} %5p ${hostName} && [%15.15t] %-40.40c{1.} : %m%n%ex</Property> -->
+        <Property name="CUSTOMLOG_PATTERN">[%d{dd-MM-yyyy HH:mm:ss.SSS}] @:@ ${hostName} @:@ ${bundle:application:product.name} @:@ %m%n%ex</Property>
+        <Property name="APP_LOG_ROOT_DIR">F:\GitHub Developments\SpringBootCustomLogWriter\loggerinformation</Property>
+        <Property name="PRODUCT_NAME">${bundle:application:product.name}</Property>
+    </Properties>
+     
+    <Appenders>
+    	
+    	<!-- Enable this if you want to push logs to kafka topic -->
+    	<!-- <Kafka name="Kafka" topic="loggers">
+            <PatternLayout pattern="%date %message"/>
+             <PatternLayout pattern="${CUSTOMLOG_PATTERN}"/>
+            <Property name="bootstrap.servers">localhost:9090</Property>
+        </Kafka>
+        <Async name="Async">
+            <AppenderRef ref="Kafka"/>
+        </Async> -->
+    
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${CUSTOMLOG_PATTERN}"/>
+        </Console>
+        
+        <File name="JSONLogfileAppenderInfo" fileName="${APP_LOG_ROOT_DIR}/json/${PRODUCT_NAME}_info.json">
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <JSONLayout compact="true" eventEol="true" />
+            <BurstFilter level="INFO" rate="2" maxBurst="10" />
+        </File>
+        <File name="JSONLogfileAppenderError" fileName="${APP_LOG_ROOT_DIR}/json/${PRODUCT_NAME}_error.json">
+            <LevelRangeFilter minLevel="ERROR" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <JSONLayout compact="true" eventEol="true" />
+            <BurstFilter level="ERROR" rate="2" maxBurst="10" />
+        </File>
+        
+        <File name="JSONLogfileAppenderDebug" fileName="${APP_LOG_ROOT_DIR}/json/${PRODUCT_NAME}_debug.json">
+            <LevelRangeFilter minLevel="DEBUG" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <JSONLayout compact="true" eventEol="true" />
+            <BurstFilter level="DEBUG" rate="2" maxBurst="10" />
+        </File>
+        
+        <File name="JSONLogfileAppenderTrace" fileName="${APP_LOG_ROOT_DIR}/json/${PRODUCT_NAME}_trace.json">
+            <LevelRangeFilter minLevel="TRACE" maxLevel="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <JSONLayout compact="true" eventEol="true" />
+            <BurstFilter level="TRACE" rate="2" maxBurst="10" />
+        </File>
+        
+        <File name="JSONLogfileAppenderWarn" fileName="${APP_LOG_ROOT_DIR}/json/${PRODUCT_NAME}_warn.json">
+            <LevelRangeFilter minLevel="WARN" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <JSONLayout compact="true" eventEol="true" />
+            <BurstFilter level="WARN" rate="2" maxBurst="10" />
+        </File>
+        
+        <Async name="AsyncAppender" bufferSize="80">
+            <AppenderRef ref="JSONLogfileAppenderInfo" />
+            <AppenderRef ref="JSONLogfileAppenderError" />
+            <AppenderRef ref="JSONLogfileAppenderDebug" />
+            <AppenderRef ref="JSONLogfileAppenderTrace" />
+            <AppenderRef ref="JSONLogfileAppenderWarn" />
+        </Async>
+    </Appenders>
+ 
+    <Loggers>
+        
+        <Logger name="com.customlogwriter" additivity="false" level="info">
+        		<!--Uncomment For Kafka -->
+        	<!-- <AppenderRef ref="Kafka"/> -->
+             <AppenderRef ref="AsyncAppender" />
+        </Logger>
+        <Logger name="com.customlogwriter" additivity="false" level="debug">
+             <AppenderRef ref="AsyncAppender" />
+        </Logger>
+        <Logger name="com.customlogwriter" additivity="false" level="TRACE">
+             <AppenderRef ref="AsyncAppender" />
+        </Logger>
+      
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+ 
+</Configuration>
