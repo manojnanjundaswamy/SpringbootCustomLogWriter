@@ -13,7 +13,7 @@
     	<!-- <Kafka name="Kafka" topic="loggers">
             <PatternLayout pattern="%date %message"/>
              <PatternLayout pattern="${CUSTOMLOG_PATTERN}"/>
-            <Property name="bootstrap.servers">http://192.168.10.103:9092</Property>
+            <Property name="bootstrap.servers">localhost:9090</Property>
         </Kafka>
         <Async name="Async">
             <AppenderRef ref="Kafka"/>
